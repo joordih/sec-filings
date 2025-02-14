@@ -3,17 +3,18 @@
 mod parser;
 pub mod models;
 
-use std::error::Error;
-use std::io::{Read, Write};
-use std::fs::OpenOptions;
-use std::sync::{Arc, Mutex};
-use chrono::{NaiveDate, Datelike};
-use flate2::read::{DeflateDecoder, GzDecoder};
-use reqwest::{Client, RequestBuilder, Url};
-use reqwest::header::{HeaderMap, ACCEPT_ENCODING, HOST, USER_AGENT};
-use parser::index::{IndexEntry, extract_index_entries, get_quarter};
 use self::models::FilingTransaction;
 use self::parser::FilingDoc;
+use chrono::{Datelike, NaiveDate};
+use flate2::read::{DeflateDecoder, GzDecoder};
+use parser::index::{extract_index_entries, get_quarter, IndexEntry};
+use reqwest::header::{HeaderMap, ACCEPT_ENCODING, HOST, USER_AGENT};
+use reqwest::{Client, RequestBuilder, Url};
+use std::error::Error;
+use std::fs;
+use std::fs::OpenOptions;
+use std::io::{Read, Write};
+use std::sync::{Arc, Mutex};
 
 const BASEURL: &str = "https://www.sec.gov/Archives/";
 type Db = Arc<Mutex<Vec<FilingTransaction>>>;
@@ -36,14 +37,26 @@ pub async fn get_form(entry: &IndexEntry) -> Result<Vec<FilingTransaction>, Box<
 }
 
 fn save_failed(index_url: &str) {
-    let mut file = OpenOptions::new()
+    let log_file_path = "filings/failed.txt";
+
+    if let Err(err) = fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(log_file_path)
+        .and_then(|mut file| {
+            use std::io::Write;
+            writeln!(file, "Failed to proccess entry: {}", index_url)
+        }) {
+        eprintln!("Error occurred writing {} to failed.txt: {}", index_url, err);
+    }
+/*    let mut file = OpenOptions::new()
         .append(true)
         .open("filings/failed.txt")
         .unwrap();
 
     if let Err(_) = writeln!(file, "{}", index_url) {
         println!("Error occurred writing {} to failed.txt", index_url);
-    }
+    }*/
 }
 
 pub async fn process_entries(entries: &[IndexEntry], db: Db, skip: usize, take: usize) -> Result<(), Box<dyn Error>> {

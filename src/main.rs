@@ -1,6 +1,5 @@
 use chrono::NaiveDate;
 use chrono_tz::America::New_York;
-use tiberius::Row;
 use secfilings::miner::Miner;
 #[tokio::main]
 async fn main() {

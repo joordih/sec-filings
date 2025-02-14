@@ -1,5 +1,7 @@
 use std::collections::HashMap;
+use std::env;
 use std::sync::{Arc, Mutex};
+use once_cell::sync::Lazy;
 use tiberius::{AuthMethod, Client, Config};
 use tokio::net::TcpStream;
 use tokio_util::compat::{Compat, TokioAsyncWriteCompatExt};
@@ -11,13 +13,22 @@ use crate::secgov::models::FilingTransaction;
 pub mod insert_models;
 pub mod query_models;
 
-pub async fn get_connection() -> Result<Client<Compat<TcpStream>>, Box<dyn std::error::Error>> {
-    let mut config = Config::new();
+static CONN_STR_PORT: Lazy<String> = Lazy::new(|| {
+    env::var("TIBERIUS_TEST_CONNECTION_STRING").unwrap_or_else(|_| {
+        "server=tcp:localhost\\SQLEXPRESS,1433;database=sec;user id=sa;password=tuputamadre02;".to_owned()
+    })
+});
 
-    config.host("172.168.200.118");
-    config.port(1433);
-    config.authentication(AuthMethod::sql_server("sa", "8jioMDFHF543@"));
-    config.database("TEST_SEC");
+pub async fn get_connection() -> Result<Client<Compat<TcpStream>>, Box<dyn std::error::Error>> {
+    let mut config = Config::from_ado_string(&CONN_STR_PORT)?;
+    // let mut config = Config::new();
+    // config.authentication(AuthMethod::sql_server("sa", "tuputamadre02"));
+    // config.host("127.0.0.1");
+    // // config.instance_name("SQLEXPRESS");
+    // config.port(1433);
+    // config.database("sec");
+
+    config.trust_cert();
 
     let tcp = TcpStream::connect(config.get_addr()).await?;
     tcp.set_nodelay(true)?;
@@ -53,27 +64,18 @@ impl SqlHelper {
         let query = format!("SELECT issuer_id FROM issuer WHERE cik = '{}'", new_issuer.cik);
         let stream = client.query(query, &[]).await?;
 
-        if let Some(row) = stream.into_row().await? {
-            let issuer_id: i32 = row.get("issuer_id").unwrap();
-            cache.insert(new_issuer.cik.to_string(), issuer_id);
-            return Ok(issuer_id);
-        }
-
         let insert_query = format!(
             "INSERT INTO issuer (Name, Symbol, cik) VALUES ('{}', '{}', '{}')",
             new_issuer.issuer_name, new_issuer.issuer_symbol, new_issuer.cik
         );
 
-        client.execute(insert_query, &[]).await?;
-
-        let query = format!("SELECT issuer_id FROM issuer WHERE cik = '{}'", new_issuer.cik);
-        let stream = client.query(query, &[]).await?;
-
         if let Some(row) = stream.into_row().await? {
             let issuer_id: i32 = row.get("issuer_id").unwrap();
             cache.insert(new_issuer.cik.to_string(), issuer_id);
             return Ok(issuer_id);
         }
+
+        client.execute(insert_query, &[]).await?;
 
         Err("Failed to create issuer".into())
     }
@@ -102,15 +104,6 @@ impl SqlHelper {
 
         client.execute(insert_query, &[]).await?;
 
-        let query = format!("SELECT individual_id FROM individual WHERE cik = '{}'", new_ind.cik);
-        let stream = client.query(query, &[]).await?;
-
-        if let Some(row) = stream.into_row().await? {
-            let individual_id: i32 = row.get("individual_id").unwrap();
-            cache.insert(new_ind.cik.to_string(), individual_id);
-            return Ok(individual_id);
-        }
-
         Err("Failed to create individual".into())
     }
 
@@ -137,15 +130,6 @@ impl SqlHelper {
         );
 
         client.execute(insert_query, &[]).await?;
-
-        let query = format!("SELECT form_id FROM form WHERE AccessNo = '{}'", new_form.access_no);
-        let stream = client.query(query, &[]).await?;
-
-        if let Some(row) = stream.into_row().await? {
-            let form_id: i64 = row.get("form_id").unwrap();
-            cache.insert(new_form.access_no.clone(), form_id);
-            return Ok(form_id);
-        }
 
         Err("Failed to create form".into())
     }

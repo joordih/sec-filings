@@ -1,5 +1,6 @@
 use crate::database::{get_connection, SqlHelper};
 use crate::secgov::models::FilingTransaction;
+use crate::secgov::{get_daily_entries, process_entries};
 use chrono::{Datelike, Days, NaiveDate};
 use chrono_tz::America::New_York;
 use futures::stream::{self, StreamExt};
@@ -9,12 +10,7 @@ use std::fs::File;
 use std::io::BufReader;
 use std::path::Path;
 use std::sync::{Arc, Mutex};
-use std::thread::sleep;
 use std::time::Duration;
-use tiberius::{AuthMethod, Client, Config};
-use tokio::net::TcpStream;
-use tokio_util::compat::{Compat, TokioAsyncWriteCompatExt};
-use crate::secgov::{get_daily_entries, process_entries};
 
 pub struct Miner {
     pub mine_date: NaiveDate,
@@ -39,7 +35,7 @@ impl Miner {
 
     fn save_dir(date: NaiveDate) -> String {
         let year = date.year();
-        let month = date.format("%%m");
+        let month = date.format("%m");
         format!("filings/{year}/{month}")
     }
 
@@ -171,7 +167,6 @@ impl Miner {
 
             skip += batch;
 
-            // avoid SEC rate limiting by sleeping for 1 sec
             tokio::time::sleep(second_delay).await;
         }
 

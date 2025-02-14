@@ -1,9 +1,9 @@
 use chrono::NaiveDate;
-use std::{string::String, error::Error, format};
 use minidom::{Element, NSChoice};
 use regex::Regex;
+use std::{error::Error, format, string::String};
 
-use crate::secgov::models::{Relationship, FilingTransaction};
+use crate::secgov::models::{FilingTransaction, Relationship};
 
 #[derive(Debug, Default)]
 struct XMLNode {
@@ -113,42 +113,45 @@ impl XMLFiling {
         let form_date = Self::traverse(&root, &["periodOfReport"]).unwrap().parse_date();
         let web_url = self.get_web_url(&rpt_owner_cik);
 
-        let table = root
-            .get_child("nonDerivativeTable", NSChoice::Any)
-            .expect("Filing should have a non derivative table");
+        if let Some(non_derivation) = Self::traverse(&root, &["nonDerivativeTable", "nonDerivativeTransaction"]) {
+            let table = root
+                .get_child("nonDerivativeTable", NSChoice::Any)
+                .expect("Filing should have a non derivative table");
 
-        for child in table.children() {
-            if child.is("nonDerivativeTransaction", NSChoice::Any) {
-                let shares_traded = Self::traverse(&child, &["transactionAmounts", "transactionShares"]).unwrap().parse_num();
-                let avg_price = Self::traverse(&child, &["transactionAmounts", "transactionPricePerShare"]).unwrap().parse_num();
+            for child in table.children() {
+                if child.is("nonDerivativeTransaction", NSChoice::Any) {
+                    let shares_traded = Self::traverse(&child, &["transactionAmounts", "transactionShares"]).unwrap().parse_num();
+                    let avg_price = Self::traverse(&child, &["transactionAmounts", "transactionPricePerShare"]).unwrap().parse_num();
 
-                let filing = FilingTransaction {
-                    web_url: web_url.clone(),
-                    form_url: self.url.clone(),
-                    access_no: access_no.clone(),
-                    form_date: form_date.clone(),
-                    company_cik:  company_cik.clone(),
-                    owner_cik: rpt_owner_cik.clone(),
-                    form_type: form_type.clone(),
-                    company: company.clone(),
-                    symbol: symbol.clone(),
-                    owner: owner.clone(),
-                    shares_traded: shares_traded,
-                    avg_price: avg_price,
-                    amount: shares_traded * avg_price,
-                    shares_owned: Self::traverse(&child, &["postTransactionAmounts", "sharesOwnedFollowingTransaction"]).unwrap().parse_num(),
-                    trans_date: Self::traverse(&child, &["transactionDate"]).unwrap().parse_date(),
-                    relationship: relationships.clone(),
-                    action_code: Self::traverse(&child, &["transactionAmounts", "transactionAcquiredDisposedCode"]).unwrap().text,
-                    ownership_code: Self::traverse(&child, &["ownershipNature", "directOrIndirectOwnership"]).unwrap().text,
-                    trans_code: Self::traverse(&child, &["transactionCoding", "transactionCode"]).unwrap().text
-                };
+                    let filing = FilingTransaction {
+                        web_url: web_url.clone(),
+                        form_url: self.url.clone(),
+                        access_no: access_no.clone(),
+                        form_date: form_date.clone(),
+                        company_cik:  company_cik.clone(),
+                        owner_cik: rpt_owner_cik.clone(),
+                        form_type: form_type.clone(),
+                        company: company.clone(),
+                        symbol: symbol.clone(),
+                        owner: owner.clone(),
+                        shares_traded: shares_traded,
+                        avg_price: avg_price,
+                        amount: shares_traded * avg_price,
+                        shares_owned: Self::traverse(&child, &["postTransactionAmounts", "sharesOwnedFollowingTransaction"]).unwrap().parse_num(),
+                        trans_date: Self::traverse(&child, &["transactionDate"]).unwrap().parse_date(),
+                        relationship: relationships.clone(),
+                        action_code: Self::traverse(&child, &["transactionAmounts", "transactionAcquiredDisposedCode"]).unwrap().text,
+                        ownership_code: Self::traverse(&child, &["ownershipNature", "directOrIndirectOwnership"]).unwrap().text,
+                        trans_code: Self::traverse(&child, &["transactionCoding", "transactionCode"]).unwrap().text
+                    };
 
-                transactions.push(filing);
+                    transactions.push(filing);
+                }
             }
+            Ok(transactions)
+        } else {
+            Err("Filing does not have a non derivative table".into())
         }
-
-        Ok(transactions)
 
     }
 }

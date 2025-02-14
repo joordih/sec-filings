@@ -1,6 +1,6 @@
-use chrono::NaiveDate;
-use bigdecimal::{BigDecimal, FromPrimitive};
 use crate::secgov::models::FilingTransaction;
+use bigdecimal::{BigDecimal, FromPrimitive};
+use chrono::NaiveDate;
 
 pub struct NewIssuer<'a> {
     pub issuer_name: &'a str,

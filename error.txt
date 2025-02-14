@@ -1,0 +1,120 @@
+thread 'tokio-runtime-worker' panicked at src\secgov\parser\atomfilings.rs:118:14:
+Filing should have a non derivative table
+stack backtrace:
+   0: std::panicking::begin_panic_handler
+             at /rustc/e71f9a9a98b0faf423844bf0ba7438f29dc27d58\library/std\src\panicking.rs:665
+   1: core::panicking::panic_fmt
+             at /rustc/e71f9a9a98b0faf423844bf0ba7438f29dc27d58\library/core\src\panicking.rs:76
+   2: core::panicking::panic_display
+             at /rustc/e71f9a9a98b0faf423844bf0ba7438f29dc27d58\library/core\src\panicking.rs:269
+   3: core::option::expect_failed
+             at /rustc/e71f9a9a98b0faf423844bf0ba7438f29dc27d58\library/core\src\option.rs:2018
+   4: enum2$<core::option::Option<ref$<minidom::element::Element> > >::expect<ref$<minidom::element::Element> >
+             at C:\Users\jordi\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\core\src\option.rs:933
+   5: secfilings::secgov::parser::atomfilings::XMLFiling::extract_transactions
+             at .\src\secgov\parser\atomfilings.rs:116
+   6: secfilings::secgov::parser::FilingDoc::new
+             at .\src\secgov\parser\mod.rs:18
+   7: secfilings::secgov::get_form::async_fn$0
+             at .\src\secgov\mod.rs:35
+   8: secfilings::secgov::process_entries::async_fn$0::async_block$0
+             at .\src\secgov\mod.rs:54
+   9: tokio::runtime::task::core::impl$6::poll::closure$0<enum2$<secfilings::secgov::process_entries::async_fn$0::async_block_env$0>,alloc::sync::Arc<tokio::runtime::scheduler::multi_thread::handle::Handle,alloc::alloc::Global> >
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\task\core.rs:331
+  10: tokio::loom::std::unsafe_cell::UnsafeCell<enum2$<tokio::runtime::task::core::Stage<enum2$<secfilings::secgov::process_entries::async_fn$0::async_block_env$0> > > >::with_mut
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\loom\std\unsafe_cell.rs:16
+  11: tokio::runtime::task::core::Core<enum2$<secfilings::secgov::process_entries::async_fn$0::async_block_env$0>,alloc::sync::Arc<tokio::runtime::scheduler::multi_thread::handle::Handle,alloc::alloc::Global> >::poll<enum2$<secfilings::secgov::process_entries::a
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\task\core.rs:320
+  12: tokio::runtime::task::harness::poll_future::closure$0<enum2$<secfilings::secgov::process_entries::async_fn$0::async_block_env$0>,alloc::sync::Arc<tokio::runtime::scheduler::multi_thread::handle::Handle,alloc::alloc::Global> >
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\task\harness.rs:532
+  13: core::panic::unwind_safe::impl$25::call_once<enum2$<core::task::poll::Poll<tuple$<> > >,tokio::runtime::task::harness::poll_future::closure_env$0<enum2$<secfilings::secgov::process_entries::async_fn$0::async_block_env$0>,alloc::sync::Arc<tokio::runtime::sc
+             at C:\Users\jordi\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\core\src\panic\unwind_safe.rs:272
+  14: std::panicking::try::do_call<core::panic::unwind_safe::AssertUnwindSafe<tokio::runtime::task::harness::poll_future::closure_env$0<enum2$<secfilings::secgov::process_entries::async_fn$0::async_block_env$0>,alloc::sync::Arc<tokio::runtime::scheduler::multi_t
+             at C:\Users\jordi\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\std\src\panicking.rs:557
+  15: std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<tokio::runtime::task::harness::impl$2::complete::closure_env$0<enum2$<secfilings::secgov::process_entries::async_fn$0::async_block_env$0>,alloc::sync::Arc<tokio::runtime::scheduler::multi_
+  16: std::panicking::try
+             at C:\Users\jordi\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\std\src\panicking.rs:520
+  17: std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<tokio::runtime::task::harness::poll_future::closure_env$0<enum2$<secfilings::secgov::process_entries::async_fn$0::async_block_env$0>,alloc::sync::Arc<tokio::runtime::scheduler::multi_threa
+             at C:\Users\jordi\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\std\src\panic.rs:358
+  18: tokio::runtime::task::harness::poll_future<enum2$<secfilings::secgov::process_entries::async_fn$0::async_block_env$0>,alloc::sync::Arc<tokio::runtime::scheduler::multi_thread::handle::Handle,alloc::alloc::Global> >
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\task\harness.rs:520
+  19: tokio::runtime::task::harness::Harness<enum2$<secfilings::secgov::process_entries::async_fn$0::async_block_env$0>,alloc::sync::Arc<tokio::runtime::scheduler::multi_thread::handle::Handle,alloc::alloc::Global> >::poll_inner<enum2$<secfilings::secgov::proces
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\task\harness.rs:209
+  20: tokio::runtime::task::harness::Harness<enum2$<secfilings::secgov::process_entries::async_fn$0::async_block_env$0>,alloc::sync::Arc<tokio::runtime::scheduler::multi_thread::handle::Handle,alloc::alloc::Global> >::poll<enum2$<secfilings::secgov::process_entr
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\task\harness.rs:154
+  21: tokio::runtime::task::raw::poll<enum2$<secfilings::secgov::process_entries::async_fn$0::async_block_env$0>,alloc::sync::Arc<tokio::runtime::scheduler::multi_thread::handle::Handle,alloc::alloc::Global> >
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\task\raw.rs:271
+  22: tokio::runtime::task::raw::RawTask::poll
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\task\raw.rs:201
+  23: tokio::runtime::task::LocalNotified<alloc::sync::Arc<tokio::runtime::scheduler::multi_thread::handle::Handle,alloc::alloc::Global> >::run<alloc::sync::Arc<tokio::runtime::scheduler::multi_thread::handle::Handle,alloc::alloc::Global> >
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\task\mod.rs:449
+  24: tokio::runtime::scheduler::multi_thread::worker::impl$1::run_task::closure$0
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\scheduler\multi_thread\worker.rs:659
+  25: tokio::runtime::coop::with_budget
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\coop.rs:107
+  26: tokio::runtime::coop::budget
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\coop.rs:73
+  27: tokio::runtime::scheduler::multi_thread::worker::Context::run_task
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\scheduler\multi_thread\worker.rs:595
+  28: tokio::runtime::scheduler::multi_thread::worker::Context::run
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\scheduler\multi_thread\worker.rs:546
+  29: tokio::runtime::scheduler::multi_thread::worker::run::closure$0::closure$0
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\scheduler\multi_thread\worker.rs:511
+  30: tokio::runtime::context::scoped::Scoped<enum2$<tokio::runtime::scheduler::Context> >::set<enum2$<tokio::runtime::scheduler::Context>,tokio::runtime::scheduler::multi_thread::worker::run::closure$0::closure_env$0,tuple$<> >
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\context\scoped.rs:40
+  31: tokio::runtime::context::set_scheduler::closure$0<tuple$<>,tokio::runtime::scheduler::multi_thread::worker::run::closure$0::closure_env$0>
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\context.rs:180
+  32: std::thread::local::LocalKey<tokio::runtime::context::Context>::try_with<tokio::runtime::context::Context,tokio::runtime::context::set_scheduler::closure_env$0<tuple$<>,tokio::runtime::scheduler::multi_thread::worker::run::closure$0::closure_env$0>,tuple$<
+             at C:\Users\jordi\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\std\src\thread\local.rs:283
+  33: std::thread::local::LocalKey<tokio::runtime::context::Context>::with<tokio::runtime::context::Context,tokio::runtime::context::set_scheduler::closure_env$0<tuple$<>,tokio::runtime::scheduler::multi_thread::worker::run::closure$0::closure_env$0>,tuple$<> >
+             at C:\Users\jordi\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\std\src\thread\local.rs:260
+  34: tokio::runtime::context::set_scheduler<tuple$<>,tokio::runtime::scheduler::multi_thread::worker::run::closure$0::closure_env$0>
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\context.rs:180
+  35: tokio::runtime::scheduler::multi_thread::worker::run::closure$0
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\scheduler\multi_thread\worker.rs:506
+  36: tokio::runtime::context::runtime::enter_runtime<tokio::runtime::scheduler::multi_thread::worker::run::closure_env$0,tuple$<> >
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\context\runtime.rs:65
+  37: tokio::runtime::scheduler::multi_thread::worker::run
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\scheduler\multi_thread\worker.rs:498
+  38: tokio::runtime::scheduler::multi_thread::worker::impl$0::launch::closure$0
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\scheduler\multi_thread\worker.rs:464
+  39: tokio::runtime::blocking::task::impl$2::poll<tokio::runtime::scheduler::multi_thread::worker::impl$0::launch::closure_env$0,tuple$<> >
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\blocking\task.rs:42
+  40: tokio::runtime::task::core::impl$6::poll::closure$0<tokio::runtime::blocking::task::BlockingTask<tokio::runtime::scheduler::multi_thread::worker::impl$0::launch::closure_env$0>,tokio::runtime::blocking::schedule::BlockingSchedule>
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\task\core.rs:331
+  41: tokio::loom::std::unsafe_cell::UnsafeCell<enum2$<tokio::runtime::task::core::Stage<tokio::runtime::blocking::task::BlockingTask<tokio::runtime::scheduler::multi_thread::worker::impl$0::launch::closure_env$0> > > >::with_mut
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\loom\std\unsafe_cell.rs:16
+  42: tokio::runtime::task::core::Core<tokio::runtime::blocking::task::BlockingTask<tokio::runtime::scheduler::multi_thread::worker::impl$0::launch::closure_env$0>,tokio::runtime::blocking::schedule::BlockingSchedule>::poll<tokio::runtime::blocking::task::Blocki
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\task\core.rs:320
+  43: tokio::runtime::task::harness::poll_future::closure$0<tokio::runtime::blocking::task::BlockingTask<tokio::runtime::scheduler::multi_thread::worker::impl$0::launch::closure_env$0>,tokio::runtime::blocking::schedule::BlockingSchedule>
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\task\harness.rs:532
+  44: core::panic::unwind_safe::impl$25::call_once<enum2$<core::task::poll::Poll<tuple$<> > >,tokio::runtime::task::harness::poll_future::closure_env$0<tokio::runtime::blocking::task::BlockingTask<tokio::runtime::scheduler::multi_thread::worker::impl$0::launch::
+             at C:\Users\jordi\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\core\src\panic\unwind_safe.rs:272
+  45: std::panicking::try::do_call<core::panic::unwind_safe::AssertUnwindSafe<tokio::runtime::task::harness::poll_future::closure_env$0<tokio::runtime::blocking::task::BlockingTask<tokio::runtime::scheduler::multi_thread::worker::impl$0::launch::closure_env$0>,t
+             at C:\Users\jordi\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\std\src\panicking.rs:557
+  46: std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<tokio::runtime::task::harness::impl$2::complete::closure_env$0<tokio::runtime::blocking::task::BlockingTask<tokio::runtime::scheduler::multi_thread::worker::impl$0::launch::closure_env$0>,
+  47: std::panicking::try
+             at C:\Users\jordi\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\std\src\panicking.rs:520
+  48: std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<tokio::runtime::task::harness::poll_future::closure_env$0<tokio::runtime::blocking::task::BlockingTask<tokio::runtime::scheduler::multi_thread::worker::impl$0::launch::closure_env$0>,tokio
+             at C:\Users\jordi\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\std\src\panic.rs:358
+  49: tokio::runtime::task::harness::poll_future<tokio::runtime::blocking::task::BlockingTask<tokio::runtime::scheduler::multi_thread::worker::impl$0::launch::closure_env$0>,tokio::runtime::blocking::schedule::BlockingSchedule>
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\task\harness.rs:520
+  50: tokio::runtime::task::harness::Harness<tokio::runtime::blocking::task::BlockingTask<tokio::runtime::scheduler::multi_thread::worker::impl$0::launch::closure_env$0>,tokio::runtime::blocking::schedule::BlockingSchedule>::poll_inner<tokio::runtime::blocking::
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\task\harness.rs:209
+  51: tokio::runtime::task::harness::Harness<tokio::runtime::blocking::task::BlockingTask<tokio::runtime::scheduler::multi_thread::worker::impl$0::launch::closure_env$0>,tokio::runtime::blocking::schedule::BlockingSchedule>::poll<tokio::runtime::blocking::task::
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\task\harness.rs:154
+  52: tokio::runtime::task::raw::poll<tokio::runtime::blocking::task::BlockingTask<tokio::runtime::scheduler::multi_thread::worker::impl$0::launch::closure_env$0>,tokio::runtime::blocking::schedule::BlockingSchedule>
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\task\raw.rs:271
+  53: tokio::runtime::task::raw::RawTask::poll
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\task\raw.rs:201
+  54: tokio::runtime::task::UnownedTask<tokio::runtime::blocking::schedule::BlockingSchedule>::run<tokio::runtime::blocking::schedule::BlockingSchedule>
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\task\mod.rs:486
+  55: tokio::runtime::blocking::pool::Task::run
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\blocking\pool.rs:161
+  56: tokio::runtime::blocking::pool::Inner::run
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\blocking\pool.rs:511
+  57: tokio::runtime::blocking::pool::impl$6::spawn_thread::closure$0
+             at C:\Users\jordi\.cargo\registry\src\index.crates.io-6f17d22bba15001f\tokio-1.43.0\src\runtime\blocking\pool.rs:469
+  58: core::hint::black_box
+             at C:\Users\jordi\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\core\src\hint.rs:389
+note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace
