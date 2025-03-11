@@ -1,0 +1,34 @@
+name: Reset Commit History
+
+on:
+  workflow_dispatch:  # Se ejecuta manualmente
+
+jobs:
+  reset-history:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Asegura permisos de escritura en el repositorio
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1  # Solo obtener el último commit
+
+      - name: Configurar identidad de GitHub
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+
+      - name: Resetear historial de commits
+        run: |
+          git checkout --orphan temp_branch
+          git add -A
+          git commit -m "Preserving only the latest commit"
+          git branch -D master  # Delete the master branch
+          git branch -m master  # Rename temp_branch to master
+          
+      - name: Autenticar y forzar push a master
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git
+          git push origin master --force  # Forzar actualización de la rama master
+
